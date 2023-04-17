@@ -1,20 +1,29 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+/* eslint-disable camelcase */
+import { NhostClient, NhostProvider } from '@nhost/react'
+import { NhostApolloProvider } from '@nhost/react-apollo'
+
+import { NHOST_REGION, NHOST_SUBDOMAIN } from '@env'
+
+import { AuthProvider } from './src/contexts'
+import { NavigationContainer } from '@react-navigation/native'
+import Routes from './src/routes'
+import React from 'react'
+
+const nhost = new NhostClient({
+  region: NHOST_REGION,
+  subdomain: NHOST_SUBDOMAIN,
+})
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+    <NhostProvider nhost={nhost}>
+      <NhostApolloProvider nhost={nhost}>
+        <NavigationContainer>
+          <AuthProvider>
+            <Routes />
+          </AuthProvider>
+        </NavigationContainer>
+      </NhostApolloProvider>
+    </NhostProvider>
+  )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
